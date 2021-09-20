@@ -7,8 +7,15 @@
     "build": "tsc",
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "controller",
+    "decorator"
+  ],
+  "author": "Chris Opstrup <ckjaersig@gmail.com>",
+  "repository": {
+    "url": "https://github.com/cmk2179/express-controller-pattern"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.13",
