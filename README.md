@@ -9,16 +9,16 @@ I like the way that C# and other languages set up routing, using controllers - s
 Base decorators:
 
 - `@Controller(routePrefix)`
-- `@Route(routePrefix, httpVerb)`
+- `@Route(path, httpVerb)`
 
 Convenience decorators, aliases for `@Route`:
 
-- `@GET(routePrefix)` -> `@Route(routePrefix, "get")`
-- `@PUT(routePrefix)` -> `@Route(routePrefix, "put")`
-- `@POST(routePrefix)` -> `@Route(routePrefix, "post")`
-- `@HEAD(routePrefix)` -> `@Route(routePrefix, "head")`
-- `@DELETE(routePrefix)` -> `@Route(routePrefix, "delete")`
-- `@OPTIONS(routePrefix)` -> `@Route(routePrefix, "options")`
+- `@GET(path)` -> `@Route(path, "get")`
+- `@PUT(path)` -> `@Route(path, "put")`
+- `@POST(path)` -> `@Route(path, "post")`
+- `@HEAD(path)` -> `@Route(path, "head")`
+- `@DELETE(path)` -> `@Route(path, "delete")`
+- `@OPTIONS(path)` -> `@Route(path, "options")`
 
 All decorators also accepts optional middleware functions that are applied in the following order:
 
