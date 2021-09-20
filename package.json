@@ -1,0 +1,26 @@
+{
+  "name": "express-controller-pattern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.9.4",
+    "@types/supertest": "^2.0.11",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jest": "^27.2.0",
+    "reflect-metadata": "^0.1.13",
+    "supertest": "^6.1.6",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.3"
+  }
+}
