@@ -6,6 +6,20 @@ I like the way that C# and other languages setup routing, using controllers - so
 
 ## Documentation
 
+Base decorators:
+
+- `@Controller(routePrefix)`
+- `@Route(routePrefix, httpVerb)`
+
+Convenience decorators, aliases for `@Route`:
+
+- `@GET(routePrefix)` -> `@Route(routePrefix, "get")`
+- `@PUT(routePrefix)` -> `@Route(routePrefix, "put")`
+- `@POST(routePrefix)` -> `@Route(routePrefix, "post")`
+- `@HEAD(routePrefix)` -> `@Route(routePrefix, "head")`
+- `@DELETE(routePrefix)` -> `@Route(routePrefix, "delete")`
+- `@OPTIONS(routePrefix)` -> `@Route(routePrefix, "options")`
+
 ### Sample controller
 
 ```typescript
@@ -30,4 +44,4 @@ export class UserController {
 ## Ideas for improvement
 
 - Auto import controllers in folder
-- Instead of using req and res, the controller method should get relevant arguments passed in and return a response object instead.
+- Instead of using req and res, the controller method should get relevant arguments passed in and return a response object instead. Perhaps input arguments could be via some kind of dependency injection using decorators.
