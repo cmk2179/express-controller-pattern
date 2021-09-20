@@ -12,7 +12,7 @@ import {
   registerControllers,
 } from "../src";
 
-// Middleware to block unathenticated users
+// Middleware to block unathenticated users - no practical use, just for test purpose
 function isAuthenticated(req: Request, res: Response) {
   res.status(401).end();
 }
@@ -25,6 +25,7 @@ function specialHandler(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+// Block all options requests to /api
 @Controller("/api", [specialHandler])
 class ApiController {
   private data: any = { data: "this is server data" };
@@ -51,6 +52,7 @@ class ApiController {
     res.json(this.data);
   }
 
+  // Block all requests to PUT /data
   @PUT("/data", [isAuthenticated])
   public updateData(req: Request, res: Response) {
     res.json({
@@ -59,6 +61,7 @@ class ApiController {
     });
   }
 
+  // Block all requests to DELETE /data
   @DELETE("/data", [isAuthenticated])
   public deleteData(req: Request, res: Response) {
     res.status(204).end();
@@ -87,7 +90,7 @@ describe("Controller with middleware", () => {
   });
 
   describe("OPTIONS /api/data", () => {
-    it("should get options for data", () => {
+    it("should return not implemented status code", () => {
       return request(app).options("/api/data").expect(501);
     });
   });
@@ -113,13 +116,13 @@ describe("Controller with middleware", () => {
   });
 
   describe("PUT /api/data", () => {
-    it("should return updated data", () => {
+    it("should not be allowed", () => {
       return request(app).put("/api/data").send({ updated: true }).expect(401);
     });
   });
 
   describe("DELETE /api/data", () => {
-    it("should delete data", () => {
+    it("should not be allowed", () => {
       return request(app).delete("/api/data").expect(401);
     });
   });

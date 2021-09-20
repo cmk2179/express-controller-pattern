@@ -5,6 +5,7 @@ export const Controller = (
   middleware: express.Handler[] = []
 ): ClassDecorator => {
   return (target: any) => {
+    // Store prefix and middleware methods
     Reflect.defineMetadata("prefix", prefix, target);
     Reflect.defineMetadata("middleware", middleware, target);
 
@@ -15,6 +16,7 @@ export const Controller = (
   };
 };
 
+// These http verbs corresponds to methods on express.Application
 export type HttpVerb = "get" | "post" | "put" | "delete" | "options" | "head";
 
 export interface RouteDefinition {
@@ -29,7 +31,7 @@ export const Route = (
   httpMethod: HttpVerb = "get",
   middleware: express.Handler[]
 ): MethodDecorator => {
-  // `target` equals our class, `propertyKey` equals our decorated method name
+  // `target` equals the class, `propertyKey` equals the decorated method name
   return (target, propertyKey: string | symbol): void => {
     // In case this is the first route to be registered the `routes` metadata is likely to be undefined at this point.
     // To prevent any further validation simply set it to an empty array here.
@@ -37,7 +39,7 @@ export const Route = (
       Reflect.defineMetadata("routes", [], target.constructor);
     }
 
-    // Get the routes stored so far, extend it by the new route and re-set the metadata.
+    // Get the routes stored so far, extend it by the new route and save the metadata again.
     const routes = Reflect.getMetadata(
       "routes",
       target.constructor
@@ -53,6 +55,7 @@ export const Route = (
   };
 };
 
+// Convenience methods that wrap Route
 export const GET = (
   path: string,
   middleware: express.Handler[] = []

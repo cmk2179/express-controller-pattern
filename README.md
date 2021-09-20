@@ -20,6 +20,11 @@ Convenience decorators, aliases for `@Route`:
 - `@DELETE(routePrefix)` -> `@Route(routePrefix, "delete")`
 - `@OPTIONS(routePrefix)` -> `@Route(routePrefix, "options")`
 
+All decorators also accepts optional middleware functions that are applied in the following order:
+
+1. Controller wide middleware, via `@Controller`, are applied first and applies to all routes in the controller
+2. Route specific middleware, via `@Route`, `@GET`, `@POST`, etc. are applied only for the given route, after any middleware that has been applied controller wide
+
 ### Sample controller
 
 ```typescript
