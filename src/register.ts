@@ -1,5 +1,7 @@
 import express from "express";
-import { RouteDefinition } from "controller";
+import { HttpResponse } from "./responses";
+import { RouteDefinition } from "./controller";
+import { ParamDefinition } from "./params";
 
 export type ControllerFn<T> = new (...args: any[]) => T;
 
@@ -29,8 +31,48 @@ export function registerControllers(
           ...middleware,
           ...route.middleware,
           (req: express.Request, res: express.Response) => {
-            // Execute our method for this path and pass our express request and response object.
-            instance[route.methodName](req, res);
+            // Get the registered params for the method
+            const params = (
+              (Reflect.getMetadata(
+                route.methodName,
+                controller
+              ) as ParamDefinition[]) ?? []
+            ).reduce((acc: any[], param) => {
+              switch (param.type) {
+                case "param":
+                  acc[param.index] = req.params[param.name];
+                  break;
+                case "queryParam":
+                  acc[param.index] = req.query[param.name];
+                  break;
+                case "request":
+                  acc[param.index] = req;
+                  break;
+                case "response":
+                  acc[param.index] = res;
+                  break;
+                case "body":
+                  acc[param.index] = req.body;
+              }
+              return acc;
+            }, []);
+
+            // Handle promises / async return values from handler
+            Promise.resolve(instance[route.methodName](...params)).then(
+              (response) => {
+                if (response instanceof HttpResponse) {
+                  // If response is an http response, use the built-in apply method to send
+                  response.apply(res);
+                } else if (typeof response === "object") {
+                  // If response is an object, send as json
+                  res.json(response);
+                } else if (typeof response !== "undefined") {
+                  // If response is defined, send as text
+                  res.send(response);
+                }
+                // If response is undefined, assume handler has sent response already
+              }
+            );
           }
         );
       } else {
