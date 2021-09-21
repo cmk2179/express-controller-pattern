@@ -2,14 +2,18 @@ import request from "supertest";
 import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import {
+  Body,
   Controller,
   DELETE,
   GET,
   HEAD,
+  HttpResponse,
   OPTIONS,
   POST,
   PUT,
   registerControllers,
+  Req,
+  Res,
 } from "../src";
 
 // Middleware to block unathenticated users - no practical use, just for test purpose
@@ -31,40 +35,41 @@ class ApiController {
   private data: any = { data: "this is server data" };
 
   @POST("/echo")
-  public echo(req: Request, res: Response) {
-    res.send(req.body);
+  public echo(@Body body: any) {
+    return body;
   }
 
   @OPTIONS("/data")
-  public getDataOptions(req: Request, res: Response) {
-    res.set("Allow", "HEAD,GET,PUT,DELETE,OPTIONS");
-    res.status(200).end();
+  public getDataOptions() {
+    return new HttpResponse().setHeader("Allow", "HEAD,GET,PUT,DELETE,OPTIONS");
   }
 
   @HEAD("/data")
-  public getDataHeaders(req: Request, res: Response) {
-    res.set("Content-Length", JSON.stringify(this.data).length.toString());
-    res.status(204).end();
+  public getDataHeaders() {
+    return new HttpResponse()
+      .status(204)
+      .setHeader("Content-Length", JSON.stringify(this.data).length.toString())
+      .end();
   }
 
   @GET("/data")
-  public getData(req: Request, res: Response) {
-    res.json(this.data);
+  public getData() {
+    return this.data;
   }
 
   // Block all requests to PUT /data
   @PUT("/data", [isAuthenticated])
-  public updateData(req: Request, res: Response) {
-    res.json({
+  public updateData(@Body body: any) {
+    return {
       ...this.data,
-      ...req.body,
-    });
+      ...body,
+    };
   }
 
   // Block all requests to DELETE /data
   @DELETE("/data", [isAuthenticated])
-  public deleteData(req: Request, res: Response) {
-    res.status(204).end();
+  public deleteData() {
+    return new HttpResponse().status(204);
   }
 }
 

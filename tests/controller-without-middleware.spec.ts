@@ -10,6 +10,8 @@ import {
   POST,
   PUT,
   registerControllers,
+  Req,
+  Res,
 } from "../src";
 
 @Controller("/api")
@@ -17,29 +19,29 @@ class ApiController {
   private data: any = { data: "this is server data" };
 
   @POST("/echo")
-  public echo(req: Request, res: Response) {
+  public echo(@Req req: Request, @Res res: Response) {
     res.send(req.body);
   }
 
   @OPTIONS("/data")
-  public getDataOptions(req: Request, res: Response) {
+  public getDataOptions(@Res res: Response) {
     res.set("Allow", "HEAD,GET,PUT,DELETE,OPTIONS");
     res.status(200).end();
   }
 
   @HEAD("/data")
-  public getDataHeaders(req: Request, res: Response) {
+  public getDataHeaders(@Res res: Response) {
     res.set("Content-Length", JSON.stringify(this.data).length.toString());
     res.status(204).end();
   }
 
   @GET("/data")
-  public getData(req: Request, res: Response) {
+  public getData(@Res res: Response) {
     res.json(this.data);
   }
 
   @PUT("/data")
-  public updateData(req: Request, res: Response) {
+  public updateData(@Req req: Request, @Res res: Response) {
     res.json({
       ...this.data,
       ...req.body,
@@ -47,7 +49,7 @@ class ApiController {
   }
 
   @DELETE("/data")
-  public deleteData(req: Request, res: Response) {
+  public deleteData(@Res res: Response) {
     res.status(204).end();
   }
 }
