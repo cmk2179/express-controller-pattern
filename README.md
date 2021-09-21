@@ -62,9 +62,9 @@ class SomethingController {
 
 There are multiple ways to handle responses, the simplest way is to return an object or a promise from the controller method. For more fine grained control it is possible to use the `Request` and `Response` objects from express directly as show in the previous section or return an instance of `HttpResponse` from the method. All `HttpResponse` methods returns the instance ifself so multiple calls can easily be chained, see the sample controller in the next section.
 
-### Sample controller
+### Example controller
 
-A simplified sample controller that uses a little bit of everything that has been explained above. The `userDbClient` and `User` interface have not been implemented, but it should give an idea of the different usecases.
+A simplified controller that uses a little bit of everything that has been explained above. While some functions and interfaces have not been implemented the example should still give an idea of the different usecases.
 
 ```typescript
 import {
@@ -77,7 +77,8 @@ import {
   Param,
 } from "express-controller-pattern";
 
-@Controller("/api/user")
+// Add a controller wide middleware for logging requests to this controller, prefixed with the class name
+@Controller("/api/user", [createLoggerMiddleware("UserController")])
 export class UserController {
   @GET("/")
   public async getUsers(@QueryParam("filter") filter): Promise<User[]> {
@@ -85,7 +86,8 @@ export class UserController {
     return userDbClient.getAllUsers({ filter });
   }
 
-  @POST("/")
+  // Add middleware to only this route, that prevents unauthorized access
+  @POST("/", [isAuthorized])
   public createUser(@Body user: User) {
     // validation returns an HttpResponse with status 400 on missing parameters
     if (!user.firstName || !user.lastName) {
