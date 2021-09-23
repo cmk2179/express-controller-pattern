@@ -63,14 +63,11 @@ export function registerControllers(
                 if (response instanceof HttpResponse) {
                   // If response is an http response, use the built-in apply method to send
                   response.apply(res);
-                } else if (typeof response === "object") {
-                  // If response is an object, send as json
-                  res.json(response);
                 } else if (typeof response !== "undefined") {
-                  // If response is defined, send as text
-                  res.send(response);
+                  // Otherwise if response is defined, wrap it in http response as json and apply it
+                  new HttpResponse().json(response).apply(res);
                 }
-                // If response is undefined, assume handler has sent response already
+                // If response is undefined and we reach here - just assume the handler has sent a response already
               }
             );
           }

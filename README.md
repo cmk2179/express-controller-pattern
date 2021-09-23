@@ -1,6 +1,6 @@
 # Express controller pattern
 
-Having worked a lot with typescript and express if just felt that something was missing in the way routes are registered and found that there are a few articles on how to use decorators for route creation with express, but I did not find any recent, up-to-date npm packages that solved this in a way I found practical.
+Having worked a lot with typescript and express I just felt that something was missing in the way routes are registered and found that there are a few articles on how to use decorators for route creation with express, but I did not find any recent, up-to-date npm packages that solved this in a way I found practical.
 
 I like the way that C# and other languages set up routing, using controllers - so I started reading articles on the web and after reading [this](https://nehalist.io/routing-with-typescript-decorators/) article, I was inspired to create an npm package that uses decorators for routing using express.
 

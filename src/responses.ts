@@ -5,7 +5,7 @@ export class HttpResponse {
   protected statusCode: number = 200;
   protected body: any | undefined;
 
-  protected forceEnd: boolean = false;
+  protected isJson: boolean = false;
 
   status(code: number) {
     this.statusCode = code;
@@ -18,6 +18,7 @@ export class HttpResponse {
   }
 
   data(body: any | undefined, contentType: string = "text/plain") {
+    this.isJson = false;
     this.body = body;
     this.setHeader("Content-Type", contentType);
     return this;
@@ -32,13 +33,13 @@ export class HttpResponse {
   }
 
   json(body: any) {
-    this.setHeader("Content-Type", "application/json");
+    this.isJson = true;
     this.body = body;
     return this;
   }
 
   end() {
-    this.forceEnd = true;
+    this.body = undefined;
     return this;
   }
 
@@ -47,8 +48,10 @@ export class HttpResponse {
       res.set(entry[0], entry[1]);
     }
 
-    if (this.forceEnd) {
+    if (typeof this.body === "undefined") {
       res.status(this.statusCode).end();
+    } else if (this.isJson) {
+      res.status(this.statusCode).json(this.body);
     } else {
       res.status(this.statusCode).send(this.body);
     }

@@ -52,6 +52,11 @@ class ApiController {
   public deleteData(@Res res: Response) {
     res.status(204).end();
   }
+
+  @GET("/primitive/number")
+  public getNumber(): number {
+    return 10;
+  }
 }
 
 describe("Controller without middleware", () => {
@@ -122,6 +127,18 @@ describe("Controller without middleware", () => {
   describe("DELETE /api/data", () => {
     it("should delete data", () => {
       return request(app).delete("/api/data").expect(204);
+    });
+  });
+
+  describe("GET /api/primitive/number", () => {
+    it("should send number as json", () => {
+      return request(app)
+        .get("/api/primitive/number")
+        .expect(200)
+        .expect("Content-Type", "application/json; charset=utf-8")
+        .then((res) => {
+          expect(res.body).toEqual(10);
+        });
     });
   });
 });
