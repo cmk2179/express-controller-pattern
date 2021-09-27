@@ -137,4 +137,3 @@ app.listen(3000);
 
 - Auto import controllers in folder
 - Injection in middleware similar to the way it works in controller
-- Better injection support, more dynamic. Possibly allowing the addition of other tokens in from the consuming application.

@@ -50,7 +50,7 @@ describe("Controller using views", () => {
     const req = request(app).post("/235");
     const reqUrl = new URL(req.url);
 
-    return req.expect(301).then((res) => {
+    return req.expect(302).then((res) => {
       expect(res.headers.location).toEqual(`http://${reqUrl.host}/235`);
     });
   });

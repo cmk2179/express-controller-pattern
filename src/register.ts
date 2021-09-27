@@ -60,25 +60,9 @@ function createHandler(
         controller
       ) as ParamDefinition[]) ?? []
     ).reduce((acc: any[], param) => {
-      switch (param.type) {
-        case "param":
-          acc[param.index] = req.params[param.name];
-          break;
-        case "queryParam":
-          acc[param.index] = req.query[param.name];
-          break;
-        case "request":
-          acc[param.index] = req;
-          break;
-        case "response":
-          acc[param.index] = res;
-          break;
-        case "body":
-          acc[param.index] = req.body;
-          break;
-        case "serverUri":
-          acc[param.index] = `${req.protocol}://${req.get("Host")}`;
-          break;
+      if (param.resolver) {
+        const value = param.resolver(req, res);
+        acc[param.index] = value;
       }
       return acc;
     }, []);

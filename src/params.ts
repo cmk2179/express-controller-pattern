@@ -1,10 +1,14 @@
+import { Request, Response } from "express";
+
+export type ParamResolver = (req: Request, res: Response) => any;
+
 export interface ParamDefinition {
   index: number;
   name: string;
-  type: string;
+  resolver: ParamResolver;
 }
 
-const RegisterParam = (name: string, type: string) => {
+const RegisterToken = (tokenName: string, resolver: ParamResolver) => {
   return (target: any, propertyKey: string | symbol, index: number) => {
     if (!Reflect.hasMetadata(propertyKey, target.constructor)) {
       Reflect.defineMetadata(propertyKey, [], target.constructor);
@@ -16,16 +20,21 @@ const RegisterParam = (name: string, type: string) => {
     );
     params.push({
       index,
-      name,
-      type,
+      name: tokenName,
+      resolver,
     });
     Reflect.defineMetadata(propertyKey, params, target.constructor);
   };
 };
 
-export const Param = (name: string) => RegisterParam(name, "param");
-export const QueryParam = (name: string) => RegisterParam(name, "queryParam");
-export const Req = RegisterParam("req", "request");
-export const Res = RegisterParam("res", "response");
-export const Body = RegisterParam("body", "body");
-export const ServerUri = RegisterParam("serverUri", "serverUri");
+export const Param = (name: string) =>
+  RegisterToken(name, (req) => req.params[name]);
+export const QueryParam = (name: string) =>
+  RegisterToken(name, (req) => req.query[name]);
+export const Req = RegisterToken("req", (req) => req);
+export const Res = RegisterToken("res", (req, res) => res);
+export const Body = RegisterToken("body", (req) => req.body);
+export const ServerUri = RegisterToken(
+  "serverUri",
+  (req) => `${req.protocol}://${req.get("Host")}`
+);
