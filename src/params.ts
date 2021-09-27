@@ -28,3 +28,4 @@ export const QueryParam = (name: string) => RegisterParam(name, "queryParam");
 export const Req = RegisterParam("req", "request");
 export const Res = RegisterParam("res", "response");
 export const Body = RegisterParam("body", "body");
+export const ServerUri = RegisterParam("serverUri", "serverUri");

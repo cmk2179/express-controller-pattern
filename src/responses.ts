@@ -7,6 +7,12 @@ export class HttpResponse {
 
   protected isJson: boolean = false;
 
+  static redirect(location: string, statusCode: number = 302) {
+    return new HttpResponse()
+      .status(statusCode)
+      .setHeader("Location", location);
+  }
+
   status(code: number) {
     this.statusCode = code;
     return this;
@@ -49,11 +55,22 @@ export class HttpResponse {
     }
 
     if (typeof this.body === "undefined") {
+      // if there is no body, use end instead of send or json
       res.status(this.statusCode).end();
     } else if (this.isJson) {
+      // If json is expected, send as json
       res.status(this.statusCode).json(this.body);
     } else {
-      res.status(this.statusCode).send(this.body);
+      // Always send body as string, if it is a number express thinks it is sending a status code
+      res.status(this.statusCode).send(this.body.toString());
     }
+  }
+}
+
+export class View<T extends object> {
+  constructor(private view: string, private data: T) {}
+
+  apply(res: Response) {
+    res.render(this.view, this.data);
   }
 }
