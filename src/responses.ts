@@ -7,10 +7,30 @@ export class HttpResponse {
 
   protected isJson: boolean = false;
 
-  static redirect(location: string, statusCode: number = 302) {
+  static Redirect(location: string, statusCode: number = 302) {
     return new HttpResponse()
       .status(statusCode)
       .setHeader("Location", location);
+  }
+
+  static Ok() {
+    return new HttpResponse().status(200);
+  }
+
+  static NoContent() {
+    return new HttpResponse().status(204).end();
+  }
+
+  static NotFound() {
+    return new HttpResponse().status(404).end();
+  }
+
+  static BadRequest(body?: any) {
+    const res = new HttpResponse().status(400);
+    if (body) {
+      return res.json(body);
+    }
+    return res;
   }
 
   status(code: number) {

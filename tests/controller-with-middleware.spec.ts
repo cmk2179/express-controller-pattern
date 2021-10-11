@@ -41,15 +41,15 @@ class ApiController {
 
   @OPTIONS("/data")
   public getDataOptions() {
-    return new HttpResponse().setHeader("Allow", "HEAD,GET,PUT,DELETE,OPTIONS");
+    return HttpResponse.Ok().setHeader("Allow", "HEAD,GET,PUT,DELETE,OPTIONS");
   }
 
   @HEAD("/data")
   public getDataHeaders() {
-    return new HttpResponse()
-      .status(204)
-      .setHeader("Content-Length", JSON.stringify(this.data).length.toString())
-      .end();
+    return HttpResponse.NoContent().setHeader(
+      "Content-Length",
+      JSON.stringify(this.data).length.toString()
+    );
   }
 
   @GET("/data")
@@ -69,7 +69,7 @@ class ApiController {
   // Block all requests to DELETE /data
   @DELETE("/data", [isAuthenticated])
   public deleteData() {
-    return new HttpResponse().status(204);
+    return HttpResponse.NoContent();
   }
 }
 

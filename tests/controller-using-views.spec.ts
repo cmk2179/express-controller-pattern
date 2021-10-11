@@ -22,7 +22,7 @@ class IndexController {
 
   @POST("/:id")
   public updateEntity(@Param("id") id: string, @ServerUri serverUri: string) {
-    return HttpResponse.redirect(`${serverUri}/${id}`);
+    return HttpResponse.Redirect(`${serverUri}/${id}`);
   }
 }
 
